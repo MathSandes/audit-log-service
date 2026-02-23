@@ -8,13 +8,13 @@
     "dev": "ts-node-dev --respawn --transpile-only src/http/server.ts",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/http/server.js",
-    "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n",
-    "migrate:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
+    "migrate:run": "typeorm-ts-node-commonjs -d src/infrastructure/db/data-source.ts migration:run",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "fastify": "^4.25.0",
     "zod": "^3.23.0",
     "reflect-metadata": "^0.1.13",

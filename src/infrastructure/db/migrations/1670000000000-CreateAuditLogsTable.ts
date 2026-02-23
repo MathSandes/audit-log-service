@@ -2,6 +2,8 @@ import { MigrationInterface, QueryRunner, Table, TableIndex } from "typeorm";
 
 export class CreateAuditLogsTable1670000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto"');
+
     await queryRunner.createTable(
       new Table({
         name: "audit_logs",

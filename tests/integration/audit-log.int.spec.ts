@@ -1,6 +1,7 @@
 import { describe, it, beforeAll, afterAll, expect } from "vitest";
 import { buildServer } from "../../src/http/server";
 import { AppDataSource } from "../../src/infrastructure/db/data-source";
+import { AuditLog } from "../../src/domain/AuditLog";
 
 let server: any;
 
@@ -17,6 +18,8 @@ afterAll(async () => {
 
 describe("HTTP - audit logs", () => {
   it("creates and lists audit logs", async () => {
+    await AppDataSource.getRepository(AuditLog).clear();
+
     const payload = {
       actorId: "user-1",
       actorType: "USER",
