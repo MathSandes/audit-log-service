@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
 import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
 
 const ActorTypeEnum = z.enum(["USER", "SYSTEM"]);
 
@@ -18,19 +17,19 @@ export class AuditLog {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   actorId!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   actorType!: "USER" | "SYSTEM";
 
-  @Column()
+  @Column({ type: "varchar" })
   action!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   entityType!: string;
 
-  @Column()
+  @Column({ type: "varchar" })
   entityId!: string;
 
   @Column({ type: "jsonb", nullable: true })
@@ -39,36 +38,16 @@ export class AuditLog {
   @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  private constructor(props: {
-    id?: string;
-    actorId: string;
-    actorType: "USER" | "SYSTEM";
-    action: string;
-    entityType: string;
-    entityId: string;
-    metadata?: Record<string, unknown>;
-  }) {
-    if (props.id) this.id = props.id;
-    this.actorId = props.actorId;
-    this.actorType = props.actorType;
-    this.action = props.action;
-    this.entityType = props.entityType;
-    this.entityId = props.entityId;
-    this.metadata = props.metadata;
-  }
-
   static create(input: unknown): AuditLog {
     const parsed = AuditLogCreateSchema.parse(input);
-    const id = uuidv4();
-    return new AuditLog({
-      id,
-      actorId: parsed.actorId,
-      actorType: parsed.actorType,
-      action: parsed.action,
-      entityType: parsed.entityType,
-      entityId: parsed.entityId,
-      metadata: parsed.metadata
-    });
+    const log = new AuditLog();
+    log.actorId = parsed.actorId;
+    log.actorType = parsed.actorType;
+    log.action = parsed.action;
+    log.entityType = parsed.entityType;
+    log.entityId = parsed.entityId;
+    log.metadata = parsed.metadata;
+    return log;
   }
 }
 
